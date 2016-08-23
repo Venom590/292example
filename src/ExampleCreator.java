@@ -8,11 +8,6 @@ import java.util.Random;
 public class ExampleCreator {
     private long identifier;
 
-    private long nextEmp;
-    private long nextCus;
-    private long nextLog;
-    private long nextVen;
-    private long nextPrd;
     private long salesQuotationId = 0;
     private long salesQuotationSentTo = 0;
     private long salesQuotationContains = 0;
@@ -37,13 +32,6 @@ public class ExampleCreator {
     private long venCount;
     private long prdCount;
 
-    private long currEmp;
-    private long currCus;
-    private long currLog;
-    private long currVen;
-    private long currPrd;
-
-
     private String vertices;
     private String edges;
 
@@ -56,7 +44,6 @@ public class ExampleCreator {
     private float good = 0.1f;
 
     private Random rand;
-
 
     private BigDecimal revenue;
     private BigDecimal expense;
@@ -86,22 +73,7 @@ public class ExampleCreator {
         this.venCount = venCount;
         this.prdCount = prdCount;
 
-
-        nextEmp = 0;
-        nextPrd = nextEmp + empCount;
-        nextCus = nextPrd + prdCount;
-        nextLog = nextCus + cusCount;
-        nextVen = nextLog + logCount;
-
         rand = new Random();
-
-        currEmp = 0;
-        currPrd = 0;
-        currCus = 0;
-        currLog = 0;
-        currVen = 0;
-
-
     }
 
     /**
@@ -322,149 +294,106 @@ public class ExampleCreator {
         identifier++;
     }
 
-
-
-
     private void replaceNextIdentifier(){
         identifier++;
         edgesNew = edgesNew.replaceFirst("Identifier", String.valueOf(identifier));
     }
 
-
-
-//      rand.nextInt((max - min) + 1) + min;
-
     private long getNextEmp() {
         long id;
-        boolean pos;
-        boolean neg;
-//        do {
-            if (ticketSelection == 1 || ticketSelection == 2 || ticketSelection == 3) {
-                pos = rand.nextFloat() <= good;
-                if (!pos) {
-                    neg = rand.nextFloat() <= bad;
-                    if (neg) {
-                        id = 4;
-                    } else {
-                        id = rand.nextInt((3 - 2) + 1) + 2;
-                    }
+        if (ticketSelection == 1 || ticketSelection == 2 || ticketSelection == 3) {
+            if (rand.nextFloat() >= good) {     // 90%
+                if (rand.nextFloat() <= bad) {  // 70%
+                    id = 4; // bad
                 } else {
-                    id = 1;
+                    id = rand.nextInt((3 - 2) + 1) + 2; //normal
                 }
             } else {
-                id = rand.nextInt((3 - 1) + 1) + 1;
+                id = 1;
             }
-//        } while(id == currEmp);
-        currEmp = id;
+        } else {
+            id = rand.nextInt((3 - 1) + 1) + 1; //normal or good
+        }
         return id;
-//        nextEmp++;
-//        return (nextEmp % empCount);    //1-4
     }
+
     private long getNextPrd() {
         long id;
-//        do {
-            if (ticketSelection == 1 || ticketSelection == 3) {
-                id = rand.nextInt((9 - 8) + 1) + 8;
-            } else {
-                return rand.nextInt((7 - 5) + 1) + 5;
-            }
-//        } while (id == currPrd);
-        currPrd = id;
+        if (ticketSelection == 1 || ticketSelection == 3) {
+            id = rand.nextInt((9 - 8) + 1) + 8;     // bad
+        } else {
+            return rand.nextInt((7 - 5) + 1) + 5;   //normal good
+        }
         return  id;
-//        nextPrd++;
-//        return (nextPrd % prdCount) + empCount;    //5-9
     }
+
     private long getNextCus() {
         long id;
-        boolean pos;
-        boolean neg;
-//        do {
-            if (ticketSelection == 1 || ticketSelection == 3) {
-                pos = rand.nextFloat() <= good;
-                if (!pos) {
-                    neg = rand.nextFloat() <= bad;
-                    if (neg) {
-                        id = 4 + empCount + prdCount;
-                    } else {
-                        id = rand.nextInt((3 - 2) + 1) + 2 + empCount + prdCount;
-                    }
+        if (ticketSelection == 1 || ticketSelection == 3) {
+            if (rand.nextFloat() >= good) {     // 90 %
+                if (rand.nextFloat() <= bad) {  // 70%
+                    id = 4 + empCount + prdCount;   //bad
                 } else {
-                    id = 1 + empCount + prdCount;
+                    id = rand.nextInt((3 - 2) + 1) + 2 + empCount + prdCount;   //normal
                 }
             } else {
-                id = rand.nextInt((3 - 1) + 1) + 1 + empCount + prdCount;
+                id = 1 + empCount + prdCount;   //good
             }
-//        } while(id == currCus);
-        currCus = id;
+        } else {
+            id = rand.nextInt((3 - 1) + 1) + 1 + empCount + prdCount;
+        }
         return id;
-//        nextCus++;
-//        return (nextCus % cusCount) + empCount + prdCount;    //10-13
     }
+
     private long getNextLog() {
         long id;
-//        do {
-            if (ticketSelection == 1) {
-                if (rand.nextFloat() <= bad) {
-                    if (rand.nextFloat() <= 0.5f) {
-                        id = 3 + empCount + prdCount + cusCount;
-                    } else {
-                        id = 2 + empCount + prdCount + cusCount;
-                    }
+        if (ticketSelection == 1) {
+            if (rand.nextFloat() <= bad) {  //70%
+                if (rand.nextFloat() <= 0.5f) {     // 50%
+                    id = 3 + empCount + prdCount + cusCount; //bad
                 } else {
-                    id = 2 + empCount + prdCount + cusCount;
-                }
-            } else if (ticketSelection == 2 || ticketSelection == 3) {
-                if (rand.nextFloat() > good) {
-                    id = 3 + empCount + prdCount + cusCount;
-                } else {
-                    id = 2 + empCount + prdCount + cusCount;
+                    id = 2 + empCount + prdCount + cusCount; //normal
                 }
             } else {
-                if (rand.nextFloat() >= 0.5f) {
-                    id = 1 + empCount + prdCount + cusCount;
-                } else {
-                    id = 2 + empCount + prdCount + cusCount;
-                }
+                id = 2 + empCount + prdCount + cusCount;  // normal
             }
-//        } while(id == currLog);
-        currLog = id;
+        } else if (ticketSelection == 2 || ticketSelection == 3) {
+            if (rand.nextFloat() >= good) { // 90%
+                id = 3 + empCount + prdCount + cusCount; //bad
+            } else {
+                id = 2 + empCount + prdCount + cusCount; //normal
+            }
+        } else {
+            if (rand.nextFloat() >= 0.5f) { // 50%
+                id = 1 + empCount + prdCount + cusCount; //good
+            } else {
+                id = 2 + empCount + prdCount + cusCount; //normal
+            }
+        }
         return id;
-//        nextLog++;
-//        return (nextLog % logCount) + empCount + prdCount + cusCount;    //14-16
     }
+
     private long getNextVen() {         //17-20
         long id;
-//        do {
-            if (ticketSelection == 1 || ticketSelection == 2 || ticketSelection == 3) {
-                if (rand.nextFloat() <= bad) {
-                    id = 4 + empCount + prdCount + cusCount + logCount;
-                } else {
-                    id = rand.nextInt((3 - 2) + 1) + 2 + empCount + prdCount + cusCount + logCount;
-                }
+        if (ticketSelection == 1 || ticketSelection == 2 || ticketSelection == 3) {
+            if (rand.nextFloat() <= bad) {  // 70%
+                id = 4 + empCount + prdCount + cusCount + logCount; //bad
             } else {
-                id = rand.nextInt((3 - 1) + 1) + 1 + empCount + prdCount + cusCount + logCount;
+                id = rand.nextInt((3 - 2) + 1) + 2 + empCount + prdCount + cusCount + logCount; // normal
             }
-//        } while(id == currVen);
-        currVen = id;
+        } else {
+            id = rand.nextInt((3 - 1) + 1) + 1 + empCount + prdCount + cusCount + logCount; // normal or good
+        }
         return id;
-//        nextVen++;
-//        return (nextVen % venCount)  + empCount + prdCount + cusCount + logCount;
     }
+
     private long getNextUser() {
         return getNextEmp()  + empCount + prdCount + cusCount + logCount + venCount;
     }
+
     private long getClient(Long customerId) {
         return customerId + cusCount + logCount + venCount + empCount;
     }
-
-
-
-    //user = emp +20
-    //client = cus + 15
-
-
-
-
 
 
     private String readFile(String path) {
@@ -492,7 +421,6 @@ public class ExampleCreator {
         return sb.toString();
     }
 
-
     private void writeFile(String path, String content) {
         BufferedWriter writer = null;
         try {
@@ -510,7 +438,6 @@ public class ExampleCreator {
     }
 
 
-
     public void appendAllFiles(int fileCount) {
         StringBuilder sb = new StringBuilder();
 
@@ -526,6 +453,5 @@ public class ExampleCreator {
         }
         writeFile(System.getProperty("user.home") + "/edges.json", sb.toString());
     }
-
 
 }
